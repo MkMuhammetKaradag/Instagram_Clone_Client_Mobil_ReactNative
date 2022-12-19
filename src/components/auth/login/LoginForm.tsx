@@ -9,13 +9,26 @@ import {
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AuthScreenNavigationProp } from "../../../navigation/AuthStack";
+import { postLogin } from "../../../api/auth/authApi";
+import { setUser } from "../../../redux/auth/AuthSlice";
+import { useAppDispatch } from "../../../redux/hooks";
 
 const LoginForm = () => {
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const navigation = useNavigation<AuthScreenNavigationProp>();
-
+  const dispact = useAppDispatch();
   const styles = styling(true);
+
+  const loginUser = () => {
+    postLogin({
+      email,
+      password,
+    })
+      .then((res) => dispact(setUser(res.data.user)))
+      .catch((err) => console.log(err));
+  };
+
   return (
     <View>
       <View
@@ -33,8 +46,6 @@ const LoginForm = () => {
           keyboardType="email-address"
           textContentType="emailAddress"
           autoFocus={true}
-          //   onBlur={handleBlur("email")}
-          //   onChangeText={handleChange("email")}
           value={email}
           onChangeText={(e) => setEmail(e)}
         ></TextInput>
@@ -66,7 +77,7 @@ const LoginForm = () => {
       <TouchableOpacity
         style={styles.button}
         disabled={!true}
-        onPress={() => console.log("naber")}
+        onPress={() => loginUser()}
       >
         <Text style={styles.buttonText}>Log in</Text>
       </TouchableOpacity>

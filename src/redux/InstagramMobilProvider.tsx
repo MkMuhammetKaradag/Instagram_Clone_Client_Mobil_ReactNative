@@ -3,12 +3,25 @@ import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 
 import AuthReducer, { User } from "./auth/AuthSlice";
+import { getMe } from "../api/auth/authApi";
 interface InstagramMobilProviderProps {
   children: React.ReactElement<any>;
 }
 const InstagramMobilProvider = ({ children }: InstagramMobilProviderProps) => {
   const [user, setUser] = React.useState<User | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  React.useEffect(() => {
+    getMe()
+      .then((res) => {
+        setUser(res.data.user);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
 
   const reducer = {
     auth: AuthReducer,
