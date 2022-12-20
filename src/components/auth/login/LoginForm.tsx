@@ -45,6 +45,7 @@ const InnerForm = ({ dispatch }: MyFormProps) => {
       initialValues={{ email: "", password: "" }}
       onSubmit={(values) => loginUser(values)}
       validationSchema={SignInSchema}
+      validateOnMount={true}
     >
       {({
         handleChange,
@@ -53,6 +54,7 @@ const InnerForm = ({ dispatch }: MyFormProps) => {
         values,
         errors,
         touched,
+        isValid,
       }) => (
         <>
           <View
@@ -102,7 +104,8 @@ const InnerForm = ({ dispatch }: MyFormProps) => {
             <Text style={{ color: "#6bb0f5" }}>Forgot password</Text>
           </View>
           <TouchableOpacity
-            style={styles.button}
+            disabled={!isValid}
+            style={styling(isValid).button}
             onPress={() => handleSubmit()}
           >
             <Text style={styles.buttonText}>Log in</Text>

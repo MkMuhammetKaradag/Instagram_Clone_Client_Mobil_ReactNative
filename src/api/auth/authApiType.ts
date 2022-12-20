@@ -18,3 +18,9 @@ export type userLoginRequestType = {
     user: userType;
   };
 };
+
+export type SignupType = {
+  email: string;
+  password: string;
+  userNickName: string;
+};

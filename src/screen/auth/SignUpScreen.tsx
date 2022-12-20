@@ -1,41 +1,37 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { getMe } from "../../api/auth/authApi";
+import SignUpForm from "./../../components/auth/signUp/SignUpForm";
 
 const SignUpScreen = () => {
-  const getUser = () => {
-    getMe()
-      .then((r) => {
-        console.log(r);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
   return (
-    <TouchableOpacity
-      style={styles.button}
-      disabled={!true}
-      onPress={() => getUser()}
-    >
-      <Text style={styles.buttonText}>Log in</Text>
-    </TouchableOpacity>
+    <View style={styles.container}>
+      <View style={styles.logoContainer}>
+        <Image
+          style={{ height: 150, width: 150 }}
+          source={{
+            uri: "https://i.pinimg.com/736x/21/d6/7f/21d67f1d6b3be5bb2e39395311c77fc6.jpg",
+          }}
+        ></Image>
+      </View>
+      {/* <LoginForm></LoginForm> */}
+      <SignUpForm></SignUpForm>
+    </View>
   );
 };
 
 export default SignUpScreen;
 
 const styles = StyleSheet.create({
-  button: {
-    backgroundColor: "#9acaf7",
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: 42,
-    borderRadius: 5,
+  container: {
+    flex: 1,
+    backgroundColor: "black",
+
+    //justifyContent: "center",
+    paddingTop: 50,
+    paddingHorizontal: 12,
   },
-  buttonText: {
-    fontWeight: "600",
-    color: "#fff",
-    fontSize: 20,
+  logoContainer: {
+    alignItems: "center",
+    marginTop: 60,
   },
 });
