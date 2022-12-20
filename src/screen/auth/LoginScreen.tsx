@@ -4,6 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 import { AuthScreenNavigationProp } from "../../navigation/AuthStack";
 import LoginForm from "../../components/auth/login/LoginForm";
 
+
+
 const LoginScreen = () => {
   const navigation = useNavigation<AuthScreenNavigationProp>();
   return (

@@ -4,90 +4,130 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  ViewStyle,
 } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AuthScreenNavigationProp } from "../../../navigation/AuthStack";
 import { postLogin } from "../../../api/auth/authApi";
 import { setUser } from "../../../redux/auth/AuthSlice";
 import { useAppDispatch } from "../../../redux/hooks";
+import { Formik } from "formik";
+import { AnyAction, Dispatch } from "@reduxjs/toolkit";
+import * as Yup from "yup";
+interface FormValues {
+  email: string;
+  password: string;
+}
 
-const LoginForm = () => {
-  const [password, setPassword] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const navigation = useNavigation<AuthScreenNavigationProp>();
-  const dispact = useAppDispatch();
+// The type of props MyForm receives
+interface MyFormProps {
+  dispatch: Dispatch<AnyAction>;
+}
+const SignInSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid email").required("Required"),
+  password: Yup.string()
+    .min(6, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Required"),
+});
+const InnerForm = ({ dispatch }: MyFormProps) => {
   const styles = styling(true);
-
-  const loginUser = () => {
+  const loginUser = (values: FormValues) => {
     postLogin({
-      email,
-      password,
+      email: values.email,
+      password: values.password,
     })
-      .then((res) => dispact(setUser(res.data.user)))
+      .then((res) => dispatch(setUser(res.data.user)))
       .catch((err) => console.log(err));
   };
+  return (
+    <Formik
+      initialValues={{ email: "", password: "" }}
+      onSubmit={(values) => loginUser(values)}
+      validationSchema={SignInSchema}
+    >
+      {({
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        values,
+        errors,
+        touched,
+      }) => (
+        <>
+          <View
+            style={[
+              styles.inputField,
+              {
+                borderColor: errors.email && touched.email ? "red" : "#ccc",
+                borderWidth: 1,
+              },
+            ]}
+          >
+            <TextInput
+              placeholder="Phone Number,username or Email"
+              placeholderTextColor={"#444"}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              onBlur={handleBlur("email")}
+              autoFocus={true}
+              value={values.email}
+              onChangeText={handleChange("email")}
+            ></TextInput>
+          </View>
+          <View
+            style={[
+              styles.inputField,
+              {
+                borderColor:
+                  errors.password && touched.password ? "red" : "#ccc",
+                borderWidth: 1,
+              },
+            ]}
+          >
+            <TextInput
+              placeholder="Password"
+              placeholderTextColor={"#444"}
+              autoCapitalize="none"
+              textContentType="password"
+              secureTextEntry={true}
+              onBlur={handleBlur("password")}
+              value={values.password}
+              onChangeText={handleChange("password")}
+            ></TextInput>
+          </View>
+          {/* <Button onPress={() => handleSubmit()} title="Submit" /> */}
+          <View style={{ alignItems: "flex-end", marginBottom: 30 }}>
+            <Text style={{ color: "#6bb0f5" }}>Forgot password</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleSubmit()}
+          >
+            <Text style={styles.buttonText}>Log in</Text>
+          </TouchableOpacity>
+        </>
+      )}
+    </Formik>
+  );
+};
+
+const LoginForm = () => {
+  const navigation = useNavigation<AuthScreenNavigationProp>();
+  const dispatch = useAppDispatch();
+  const styles = styling(true);
 
   return (
-    <View>
-      <View
-        style={[
-          styles.inputField,
-          {
-            borderColor: email.length < 1 ? "#ccc" : "red",
-          },
-        ]}
-      >
-        <TextInput
-          placeholder="Phone Number,username or Email"
-          placeholderTextColor={"#444"}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          textContentType="emailAddress"
-          autoFocus={true}
-          value={email}
-          onChangeText={(e) => setEmail(e)}
-        ></TextInput>
-      </View>
-      <View
-        style={[
-          styles.inputField,
-          {
-            borderColor: password.length < 1 ? "#ccc" : "red",
-          },
-        ]}
-      >
-        <TextInput
-          placeholder="Password"
-          placeholderTextColor={"#444"}
-          autoCapitalize="none"
-          textContentType="password"
-          secureTextEntry={true}
-          //   onBlur={handleBlur("password")}
-          //   onChangeText={handleChange("password")}
-          value={password}
-          onChangeText={(e) => setPassword(e)}
-        ></TextInput>
-      </View>
-      <View style={{ alignItems: "flex-end", marginBottom: 30 }}>
-        <Text style={{ color: "#6bb0f5" }}>Forgot password</Text>
-      </View>
-
-      <TouchableOpacity
-        style={styles.button}
-        disabled={!true}
-        onPress={() => loginUser()}
-      >
-        <Text style={styles.buttonText}>Log in</Text>
-      </TouchableOpacity>
+    <>
+      <InnerForm dispatch={dispatch}></InnerForm>
       <View style={styles.signUpContainer}>
         <Text style={{ color: "#ffff" }}>Don't have an account? </Text>
         <TouchableOpacity onPress={() => navigation.navigate("SignUpScreen")}>
           <Text style={{ color: "#6bb0f5" }}>Sign Up</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </>
   );
 };
 
