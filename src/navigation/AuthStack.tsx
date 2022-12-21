@@ -4,11 +4,13 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import LoginScreen from "../screen/auth/LoginScreen";
 import SignUpScreen from "../screen/auth/SignUpScreen";
+import AuthHomeScreen from "../screen/auth/AuthScreen";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export type AuthStackParamList = {
   LoginScreen: undefined;
   SignUpScreen: undefined;
+  AuthHomeScreen: undefined;
   // Order: {
   //   order: Order;
   // };
@@ -23,6 +25,13 @@ const Stack = createNativeStackNavigator<AuthStackParamList>();
 const AuthStack = () => {
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="AuthHomeScreen"
+        component={AuthHomeScreen}
+      ></Stack.Screen>
       <Stack.Screen
         options={{
           headerShown: false,

@@ -2,7 +2,7 @@ import axios from "axios";
 import { SignupType, userLoginRequestType, userLoginType } from "./authApiType";
 
 const PROD_URL = "*";
-const LOCAL_URL = "http://192.168.1.33:8080";
+const LOCAL_URL = "http://192.168.1.35:8080";
 export const BASE_URL = LOCAL_URL;
 
 export const postLogin = async (

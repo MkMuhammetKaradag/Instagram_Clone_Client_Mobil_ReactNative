@@ -14,11 +14,15 @@ const InstagramMobilProvider = ({ children }: InstagramMobilProviderProps) => {
     getMe()
       .then((res) => {
         setUser(res.data.user);
+        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
+
+        setIsLoading(false);
       })
       .finally(() => {
+        console.log("naber");
         setIsLoading(false);
       });
   }, []);
