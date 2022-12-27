@@ -25,11 +25,6 @@ const SignUpForm = () => {
       .max(20, "Too Long!"),
   });
   const navigation = useNavigation<AuthScreenNavigationProp>();
-  //   const getRandomProfilePicture = async () => {
-  //     const response = await fetch("https://randomuser.me/api");
-  //     const data = await response.json();
-  //     return data.results[0].picture.large;
-  //   };
 
   const onSignUp = async (values: SignupType) => {
     postSignup(values)
@@ -80,9 +75,6 @@ const SignUpForm = () => {
           isValid,
         }) => (
           <>
-            <Text style={{ color: "white" }}>
-              {isValid ? "aaaaaaaaaaaaaaaaaaa" : "vbbbbbbbbbbbbbbbbbbb"}
-            </Text>
             <View
               style={[
                 styles().inputField,

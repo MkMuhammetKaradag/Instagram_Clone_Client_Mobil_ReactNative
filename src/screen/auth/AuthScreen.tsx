@@ -5,8 +5,11 @@ import {
   Text,
   View,
   Animated,
+  TouchableOpacity,
 } from "react-native";
 import React, { Children, useEffect, useRef, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { AuthScreenNavigationProp } from "../../navigation/AuthStack";
 
 const image = {
   uri: "https://static.cdninstagram.com/rsrc.php/v3/yr/r/fzBXVxs22bH.png",
@@ -14,20 +17,10 @@ const image = {
 const AuthHomeScreen = () => {
   const [current, setCurrent] = useState(0);
   const [animatedValue, setAnimatedValue] = useState(new Animated.Value(1));
+  const navigation = useNavigation<AuthScreenNavigationProp>();
   useEffect(() => {
     let count = 0;
     const loginPageScreenShotSlider = (): void => {
-      // Animated.timing(animatedValue, {
-      //   toValue: 0,
-      //   duration: 500,
-      //   useNativeDriver: true,
-      // }).start(() => {
-      //   Animated.timing(animatedValue, {
-      //     toValue: 1,
-      //     duration: 500,
-      //     useNativeDriver: true,
-      //   }).start();
-      // });
       if (count == 3) {
         setCurrent(0);
         count = 0;
@@ -62,7 +55,6 @@ const AuthHomeScreen = () => {
       <ImageBackground source={image} style={styles.image}>
         <View
           style={{
-            // backgroundColor: "red",
             height: 423,
             width: 200,
             right: 36,
@@ -100,6 +92,20 @@ const AuthHomeScreen = () => {
           ></Animated.Image>
         </View>
       </ImageBackground>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("LoginScreen")}
+        >
+          <Text style={styles.buttonText}>Sign In</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("SignUpScreen")}
+        >
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -108,13 +114,32 @@ export default AuthHomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 30,
     flex: 1,
     alignItems: "center",
+    backgroundColor: "#000",
+    justifyContent: "center",
   },
   image: {
     width: 350,
     height: 500,
+  },
+  buttonContainer: {
+    width: "80%",
+    display: "flex",
+    flexDirection: "column",
+  },
+  button: {
+    marginBottom: 10,
+    backgroundColor: "#0096f6",
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 42,
+    borderRadius: 5,
+  },
+  buttonText: {
+    fontWeight: "600",
+    color: "#fff",
+    fontSize: 20,
   },
   text: {
     color: "white",

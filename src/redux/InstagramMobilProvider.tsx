@@ -13,17 +13,16 @@ const InstagramMobilProvider = ({ children }: InstagramMobilProviderProps) => {
   React.useEffect(() => {
     getMe()
       .then((res) => {
+        console.log("naberv user");
         setUser(res.data.user);
-        setIsLoading(false);
       })
       .catch((err) => {
+        console.log("naber hat");
         console.log(err);
-
-        setIsLoading(false);
       })
       .finally(() => {
-        console.log("naber");
         setIsLoading(false);
+        console.log("naber");
       });
   }, []);
 
