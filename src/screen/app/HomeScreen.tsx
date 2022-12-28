@@ -11,9 +11,22 @@ import { useAppDispatch } from "../../redux/hooks";
 import { setUser } from "../../redux/auth/AuthSlice";
 import Header from "../../components/app/Home/Header";
 import Stories from "../../components/app/Home/Stories";
+import { getMyFollowUpsPosts } from "../../api/app/appApi";
+import { PostType } from "../../api/app/appApiTypes";
+import UserPosts from "../../components/app/Home/Post/UserPosts";
 
 const HomeScreen = () => {
-
+  const [userPosts, setUserPosts] = React.useState<PostType[]>([]);
+  React.useEffect(() => {
+    getMyFollowUpsPosts()
+      .then((res) => {
+        if (res.data.myFollowUpsPosts) {
+          console.log("veri çekildi");
+          setUserPosts(res.data.myFollowUpsPosts);
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -23,7 +36,10 @@ const HomeScreen = () => {
       <Header></Header>
       <ScrollView>
         <Stories></Stories>
-        <Text style={{ color: "#fff" }}>Test</Text>
+        <UserPosts
+          userPosts={userPosts}
+          setUserPosts={setUserPosts}
+        ></UserPosts>
       </ScrollView>
     </View>
   );

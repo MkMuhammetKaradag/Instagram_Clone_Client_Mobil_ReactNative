@@ -24,3 +24,8 @@ export type SignupType = {
   password: string;
   userNickName: string;
 };
+export type PostUserType = {
+  userProfilePicture?: string;
+  _id: string;
+  userNickName: string;
+};
