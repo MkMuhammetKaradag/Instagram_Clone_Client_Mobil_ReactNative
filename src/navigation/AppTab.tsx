@@ -29,11 +29,11 @@ export type TabStackParamList = {
   Search: undefined;
   Profile: undefined;
 };
-export type AppScreenNavigationProp =
+export type AppTabScreenNavigationProp =
   BottomTabNavigationProp<TabStackParamList>;
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
-export default function AppStack() {
+export default function AppTab() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

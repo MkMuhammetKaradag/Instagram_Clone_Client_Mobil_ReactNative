@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import AppStack from "./AppTab";
+import AppStack from "./AppStack";
 import AuthStack from "./AuthStack";
 import { useAppSelector } from "../redux/hooks";
 
