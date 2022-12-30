@@ -25,7 +25,7 @@ const UserPostCard = ({ userPost }: UserPostCardProps) => {
   const [status, setStatus] = React.useState<AVPlaybackStatus>();
   return (
     <View style={styles.container}>
-      <UserPostHeader></UserPostHeader>
+      <UserPostHeader owner={userPost.owner}></UserPostHeader>
       {userPost.type === "IMAGE" && (
         <Image
           style={styles.image}
@@ -76,7 +76,7 @@ const UserPostCard = ({ userPost }: UserPostCardProps) => {
         </View>
       )}
       <Text style={{ color: "white" }}>{userPost.description}</Text>
-      <UserPostFooter></UserPostFooter>
+      <UserPostFooter postId={userPost._id}></UserPostFooter>
     </View>
   );
 };

@@ -1,9 +1,15 @@
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { PostUserType } from "../../../../api/auth/authApiType";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
-const UserPostHeader = () => {
+
+type UserPostHeaderProps = {
+  owner: PostUserType;
+};
+
+const UserPostHeader = ({ owner }: UserPostHeaderProps) => {
   return (
     <View style={styles.headerContainer}>
       <View
@@ -19,10 +25,14 @@ const UserPostHeader = () => {
             borderRadius: 50,
           }}
           source={{
-            uri: "https://randomuser.me/api/portraits/men/8.jpg",
+            uri:
+              owner.userProfilePicture ||
+              "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
           }}
         ></Image>
-        <Text style={{ color: "white", marginLeft: 10 }}>User Naber</Text>
+        <Text style={{ color: "white", marginLeft: 10 }}>
+          {owner.userNickName}
+        </Text>
       </View>
       <View
         style={{
