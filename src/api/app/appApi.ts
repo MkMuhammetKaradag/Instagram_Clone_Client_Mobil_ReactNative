@@ -1,6 +1,9 @@
 import { LOCAL_URL } from "../url";
 import axios from "axios";
-import { getMyFollowUpsPostsRequestType } from "./appApiTypes";
+import {
+  getChatsRequestType,
+  getMyFollowUpsPostsRequestType,
+} from "./appApiTypes";
 export const BASE_URL = LOCAL_URL;
 
 export const getMyFollowUpsPosts = async (
@@ -26,6 +29,44 @@ export const addPostLike = async (postId: string) => {
 };
 export const removePostLike = async (postId: string) => {
   const { data } = await axios.delete(`${BASE_URL}/Post/like/${postId}`, {
+    withCredentials: true,
+  });
+  return data;
+};
+
+export const getChats = async (): Promise<getChatsRequestType> => {
+  const { data } = await axios.get(`${BASE_URL}/Chats`, {
+    withCredentials: true,
+  });
+  return data;
+};
+
+export type ChatMessage = {
+  _id: string;
+  from: {
+    userProfilePicture: string | null;
+    _id: string;
+    userNickName: string;
+  };
+  MessageText: string;
+  created_at: string;
+  updatedAt: string;
+};
+
+type getChatMessagesRequestType = {
+  message: string;
+  data: {
+    messages: {
+      _id: string;
+      users: string[];
+      Messages: ChatMessage[];
+    };
+  };
+};
+export const getChatMessages = async (
+  chatId: string
+): Promise<getChatMessagesRequestType> => {
+  const { data } = await axios.get(`${BASE_URL}/Chats/messages/${chatId}`, {
     withCredentials: true,
   });
   return data;
