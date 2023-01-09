@@ -4,12 +4,13 @@ import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { AuthScreenNavigationProp } from "../../../navigation/AuthStack";
-import { AppScreenNavigationProp } from "../../../navigation/AppTab";
+
 import { getLogout } from "../../../api/auth/authApi";
 import { useAppDispatch } from "../../../redux/hooks";
 import { setUser } from "../../../redux/auth/AuthSlice";
+import { AppScreenNavigationProp } from "../../../navigation/AppStack";
 const Header = () => {
-  const navigation = useNavigation<AppScreenNavigationProp>();
+  const navigation = useNavigation<AppScreenNavigationProp["navigation"]>();
   const dispact = useAppDispatch();
   const userLogOut = () => {
     getLogout()
@@ -46,7 +47,7 @@ const Header = () => {
             color="white"
           />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Chats")}>
           <View style={styles.unreadBadge}>
             <Text style={styles.unreadBadgeText}>11</Text>
           </View>

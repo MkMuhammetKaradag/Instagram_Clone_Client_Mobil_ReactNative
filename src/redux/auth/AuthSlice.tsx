@@ -7,12 +7,12 @@ export interface User {
   userNickName: string;
 }
 
-export interface AuthState {
+export interface AuthStateType {
   user: User | null;
   isAuthLoading: boolean;
 }
 
-const initialState: AuthState = {
+const initialState: AuthStateType = {
   user: null,
   isAuthLoading: true,
 };

@@ -14,20 +14,33 @@ import Stories from "../../components/app/Home/Stories";
 import { getMyFollowUpsPosts } from "../../api/app/appApi";
 import { PostType } from "../../api/app/appApiTypes";
 import UserPosts from "../../components/app/Home/Post/UserPosts";
-
+import { MaterialIcons } from "@expo/vector-icons";
 const HomeScreen = () => {
   const [userPosts, setUserPosts] = React.useState<PostType[]>([]);
+  const [isLoader, setIsLoader] = React.useState<boolean>(true);
   React.useEffect(() => {
     getMyFollowUpsPosts()
       .then((res) => {
         if (res.data.myFollowUpsPosts) {
           console.log("veri çekildi");
           setUserPosts(res.data.myFollowUpsPosts);
+          setIsLoader(res.data.myFollowUpsPosts.length % 5 === 0);
         }
       })
       .catch((err) => console.log(err));
   }, []);
-
+  const fetchData = () => {
+    if (userPosts.length % 5 === 0) {
+      getMyFollowUpsPosts(Math.ceil(userPosts.length / 5 + 1))
+        .then((res) => {
+          if (res.data.myFollowUpsPosts) {
+            setUserPosts((prev) => [...prev, ...res.data.myFollowUpsPosts]);
+            setIsLoader(res.data.myFollowUpsPosts.length % 5 === 0);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  };
   return (
     <View style={styles.container}>
       {/* <TouchableOpacity style={styles.button} onPress={() => userLogOut()}>
@@ -40,6 +53,18 @@ const HomeScreen = () => {
           userPosts={userPosts}
           setUserPosts={setUserPosts}
         ></UserPosts>
+        {isLoader && userPosts.length > 0 && userPosts.length < 50 && (
+          <View
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity onPress={fetchData}>
+              <MaterialIcons name="add-to-photos" size={30} color="gray" />
+            </TouchableOpacity>
+          </View>
+        )}
       </ScrollView>
     </View>
   );

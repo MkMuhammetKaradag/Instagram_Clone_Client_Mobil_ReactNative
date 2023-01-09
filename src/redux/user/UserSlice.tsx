@@ -1,15 +1,18 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ChatsType } from "../../api/app/appApiTypes";
 
 export interface UserStateType {
   likes: string[];
   followers: string[];
   followUps: string[];
+  chats: ChatsType[];
 }
 
 const initialState: UserStateType = {
   likes: [],
   followers: [],
   followUps: [],
+  chats: [],
 };
 
 export const userSlice = createSlice({
@@ -41,6 +44,9 @@ export const userSlice = createSlice({
         state.followUps.splice(index, 1);
       }
     },
+    setChats: (state, action: PayloadAction<ChatsType[]>) => {
+      state.chats = action.payload;
+    },
   },
 });
 
@@ -51,6 +57,7 @@ export const {
   setFollowUp,
   setFollowUps,
   removeFollowUp,
+  setChats,
 } = userSlice.actions;
 
 export default userSlice.reducer;

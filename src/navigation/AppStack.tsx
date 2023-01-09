@@ -14,9 +14,14 @@ import type {
 import CommentScreen from "../screen/app/CommentScreen";
 import type { StackScreenProps } from "@react-navigation/stack";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import ChatsScreen from "../screen/app/ChatsScreen";
+import MessageScreen from "../screen/app/MessageScreen";
+import type { RouteProp } from "@react-navigation/native";
 export type AppStackParamList = {
   TabApp: AppTabScreenNavigationProp;
   Comment: undefined;
+  Chats: undefined;
+  Message: { chatId?: string };
 
   //   SignUpScreen: undefined;
   //   AuthHomeScreen: undefined;
@@ -26,8 +31,11 @@ export type AppStackParamList = {
 };
 export type AppStackNavigationProp =
   NativeStackNavigationProp<AppStackParamList>;
+
+export type MessageScreenRouteProp = RouteProp<AppStackParamList, "Message">;
+
 export type AppScreenNavigationProp = CompositeScreenProps<
-  StackScreenProps<AppStackParamList, "Comment">,
+  StackScreenProps<AppStackParamList>,
   BottomTabScreenProps<TabStackParamList>
 >;
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -48,6 +56,21 @@ const AppStack = () => {
         }}
         name="Comment"
         component={CommentScreen}
+      ></Stack.Screen>
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="Chats"
+        component={ChatsScreen}
+      ></Stack.Screen>
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="Message"
+        component={MessageScreen}
+        initialParams={{ chatId: undefined }}
       ></Stack.Screen>
     </Stack.Navigator>
   );
