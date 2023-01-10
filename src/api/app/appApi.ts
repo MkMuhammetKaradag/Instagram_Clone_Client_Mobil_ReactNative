@@ -71,3 +71,15 @@ export const getChatMessages = async (
   });
   return data;
 };
+
+export const postUserPostCreated = async (formData: any) => {
+  const { data } = await axios.post(`${BASE_URL}/Post`, formData, {
+    withCredentials: true,
+
+    headers: {
+      accept: "*/*",
+      "Content-Type": `multipart/form-data`,
+    },
+  });
+  return data;
+};
