@@ -40,7 +40,9 @@ const MessageScreen = () => {
   const [messages, setMessages] = React.useState<ChatMessage[]>([]);
 
   React.useEffect(() => {
+    // console.log(socket);
     if (!socket.connected) {
+      console.log("not connected");
       socket.connect();
     }
     socket.on("connection", () => {
@@ -57,7 +59,7 @@ const MessageScreen = () => {
       socket.off("connect");
       socket.off("onMessage");
     };
-  }, [socket]);
+  }, []);
   React.useEffect(() => {
     socket.emit("join", chatId);
     getChatMessages(chatId as string).then((res) => {

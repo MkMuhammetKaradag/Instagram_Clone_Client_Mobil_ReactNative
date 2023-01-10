@@ -22,7 +22,6 @@ const HomeScreen = () => {
     getMyFollowUpsPosts()
       .then((res) => {
         if (res.data.myFollowUpsPosts) {
-          console.log("veri çekildi");
           setUserPosts(res.data.myFollowUpsPosts);
           setIsLoader(res.data.myFollowUpsPosts.length % 5 === 0);
         }
