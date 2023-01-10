@@ -9,7 +9,7 @@ const RootNavigator = () => {
   const isAuthLoading = useAppSelector((s) => s.auth.isAuthLoading);
   const userSession = useAppSelector((s) => s.auth.user);
   React.useEffect(() => {
-    console.log("değişti", isAuthLoading);
+    //console.log("değişti", isAuthLoading);
   }, [isAuthLoading]);
 
   return (

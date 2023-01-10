@@ -22,7 +22,7 @@ const MessageReply = ({ setMessages, chatId }: MessageReplyPropsType) => {
         },
         ChatId: chatId,
       });
-      console.log("gönderildi");
+      //console.log("gönderildi");
     }
 
     setMessage("");

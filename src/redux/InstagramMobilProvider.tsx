@@ -20,7 +20,7 @@ const InstagramMobilProvider = ({ children }: InstagramMobilProviderProps) => {
   React.useEffect(() => {
     getMe()
       .then((res) => {
-        console.log("naberv user");
+        //console.log("naberv user");
         setUser(res.data.user);
         setUserLikes(res.data.user?.userLikes ? res.data.user?.userLikes : []);
         setUserFollowUps(
@@ -28,12 +28,12 @@ const InstagramMobilProvider = ({ children }: InstagramMobilProviderProps) => {
         );
       })
       .catch((err) => {
-        console.log("naber hat");
+        //console.log("naber hat");
         console.log(err);
       })
       .finally(() => {
         setIsLoading(false);
-        console.log("naber");
+        //console.log("naber");
       });
   }, []);
 

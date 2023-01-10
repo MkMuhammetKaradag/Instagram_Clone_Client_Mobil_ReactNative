@@ -36,7 +36,7 @@ const Header = () => {
         ></Image>
       </TouchableOpacity>
       <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+        <TouchableOpacity onPress={() => navigation.navigate("CreatePost")}>
           <Feather name="plus-square" size={25} color="white" />
         </TouchableOpacity>
         <TouchableOpacity>

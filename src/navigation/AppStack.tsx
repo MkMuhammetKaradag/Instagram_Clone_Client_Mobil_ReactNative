@@ -17,11 +17,13 @@ import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import ChatsScreen from "../screen/app/ChatsScreen";
 import MessageScreen from "../screen/app/MessageScreen";
 import type { RouteProp } from "@react-navigation/native";
+import CreatePostScreen from "../screen/app/CreatePostScreen";
 export type AppStackParamList = {
   TabApp: AppTabScreenNavigationProp;
   Comment: undefined;
   Chats: undefined;
   Message: { chatId?: string };
+  CreatePost: undefined;
 
   //   SignUpScreen: undefined;
   //   AuthHomeScreen: undefined;
@@ -71,6 +73,13 @@ const AppStack = () => {
         name="Message"
         component={MessageScreen}
         initialParams={{ chatId: undefined }}
+      ></Stack.Screen>
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="CreatePost"
+        component={CreatePostScreen}
       ></Stack.Screen>
     </Stack.Navigator>
   );

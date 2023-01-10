@@ -31,7 +31,9 @@ const ReciverMessage = ({
           left: 0,
         }}
         source={{
-          uri: userProfilePicture ? userProfilePicture : "",
+          uri: userProfilePicture
+            ? userProfilePicture
+            : "https://t3.ftcdn.net/jpg/01/18/01/98/360_F_118019822_6CKXP6rXmVhDOzbXZlLqEM2ya4HhYzSV.jpg",
         }}
       />
 
