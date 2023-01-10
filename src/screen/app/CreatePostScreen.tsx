@@ -107,7 +107,7 @@ const CreatePostScreen = () => {
         <Button onPress={createdPostSubmit} title="gönder"></Button>
       </View>
       <Text>Naber{currentPage}</Text>
-      {currentPage == 2 && <TakeVideo></TakeVideo>}
+      {currentPage == 2 && <TakeVideo setFile={setFile}></TakeVideo>}
       {currentPage == 3 && <TakePhoto setFile={setFile}></TakePhoto>}
     </View>
   );

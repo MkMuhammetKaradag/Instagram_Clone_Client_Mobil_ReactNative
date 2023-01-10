@@ -11,8 +11,13 @@ import { ResizeMode, Video } from "expo-av";
 import { shareAsync } from "expo-sharing";
 import * as MediaLibrary from "expo-media-library";
 import { CameraRecordingOptions } from "expo-camera/build/Camera.types";
+import { FileType } from "../../../screen/app/CreatePostScreen";
 
-export default function TakeVideo() {
+type TakeVideoPropsType = {
+  setFile: React.Dispatch<React.SetStateAction<FileType | undefined>>;
+};
+
+export default function TakeVideo({ setFile }: TakeVideoPropsType) {
   let cameraRef = useRef<Camera>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean>();
   const [hasMicrophonePermission, setHasMicrophonePermission] =
@@ -56,14 +61,24 @@ export default function TakeVideo() {
   let recordVideo = () => {
     setIsRecording(true);
     let options: CameraRecordingOptions = {
-      quality: "1080p",
-      maxDuration: 20,
+      quality: "480p",
+      maxDuration: 10,
       mute: false,
+      maxFileSize: 500000,
     };
 
     cameraRef.current?.recordAsync(options).then((recordedVideo) => {
       setVideo(recordedVideo);
       setIsRecording(false);
+      let localUri = recordedVideo?.uri;
+      let filename = localUri?.split("/").pop();
+
+      // Infer the type of the video
+      let match = /\.(\w+)$/.exec(filename || "");
+      let type = match ? `video/${match[1]}` : `video`;
+      //   console.log({ uri: localUri || "", name: filename, type });
+
+      setFile({ uri: localUri || "", name: filename, type });
     });
   };
 
@@ -80,9 +95,9 @@ export default function TakeVideo() {
     };
 
     let saveVideo = () => {
-      MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
-        setVideo(undefined);
-      });
+      //   MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
+      //     setVideo(undefined);
+      //   });
     };
 
     return (
