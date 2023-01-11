@@ -1,30 +1,49 @@
-import { StyleSheet, Text, View, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import React from "react";
-import StepIndicator from "react-native-step-indicator";
+// import StepIndicator from "react-native-step-indicator";
 import TakeVideo from "../../components/app/CreatePost/TakeVideo";
 import TakePhoto from "../../components/app/CreatePost/TakePhoto";
-import { CameraCapturedPicture } from "expo-camera/src/Camera.types";
-import { string } from "yup";
+// import { CameraCapturedPicture } from "expo-camera/src/Camera.types";
+// import { string } from "yup";
 import { postUserPostCreated } from "../../api/app/appApi";
-const firstIndicatorStyles = {
-  stepIndicatorSize: 30,
-  currentStepIndicatorSize: 40,
-  separatorStrokeWidth: 3,
-  currentStepStrokeWidth: 5,
-  separatorFinishedColor: "#4aae4f",
-  separatorUnFinishedColor: "#a4d4a5",
-  stepIndicatorFinishedColor: "#4aae4f",
-  stepIndicatorUnFinishedColor: "#a4d4a5",
-  stepIndicatorCurrentColor: "#ffffff",
-  stepIndicatorLabelFontSize: 15,
-  currentStepIndicatorLabelFontSize: 15,
-  stepIndicatorLabelCurrentColor: "#000000",
-  stepIndicatorLabelFinishedColor: "#ffffff",
-  stepIndicatorLabelUnFinishedColor: "rgba(255,255,255,0.5)",
-  labelColor: "#666666",
-  labelSize: 12,
-  currentStepLabelColor: "#4aae4f",
-};
+import StepIndicator from "../../components/app/CreatePost/StepIndicator";
+import SelectPhoto from "../../components/app/CreatePost/SelectPhoto";
+import { ResizeMode, Video } from "expo-av";
+import SelectType from "../../components/app/CreatePost/SelectType";
+import InputPostInfo from "../../components/app/CreatePost/InputPostInfo";
+import ShowMedia from "../../components/app/CreatePost/ShowMedia";
+
+// const firstIndicatorStyles = {
+//   stepIndicatorSize: 30,
+//   currentStepIndicatorSize: 40,
+//   separatorStrokeWidth: 3,
+//   currentStepStrokeWidth: 5,
+//   separatorFinishedColor: "#4aae4f",
+//   separatorUnFinishedColor: "#a4d4a5",
+//   stepIndicatorFinishedColor: "#4aae4f",
+//   stepIndicatorUnFinishedColor: "#a4d4a5",
+//   stepIndicatorCurrentColor: "#ffffff",
+//   stepIndicatorLabelFontSize: 15,
+//   currentStepIndicatorLabelFontSize: 15,
+//   stepIndicatorLabelCurrentColor: "#000000",
+//   stepIndicatorLabelFinishedColor: "#ffffff",
+//   stepIndicatorLabelUnFinishedColor: "rgba(255,255,255,0.5)",
+//   labelColor: "#666666",
+//   labelSize: 12,
+//   currentStepLabelColor: "#4aae4f",
+// };
 
 export type FileType = {
   uri: string;
@@ -34,16 +53,12 @@ export type FileType = {
 
 const CreatePostScreen = () => {
   const [currentPage, setCurrentPage] = React.useState<number>(0);
-  const [hashtags, setHashtags] = React.useState<readonly string[]>([
-    "reactnative",
-    "expo",
-  ]);
-  const [description, setDescription] = React.useState<string>(
-    "muhammet deneme react  native"
-  );
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [hashtags, setHashtags] = React.useState<string>("");
+  const [description, setDescription] = React.useState<string>("");
   const [file, setFile] = React.useState<FileType>();
   const createdPostSubmit = () => {
-    if (file && description && hashtags.length > 0) {
+    if (file && description.length > 0 && hashtags.length > 0) {
       const formData = new FormData();
       formData.append("file", {
         uri: file.uri,
@@ -56,60 +71,60 @@ const CreatePostScreen = () => {
       formData.append("hashtags", hashtags.toString());
       formData.append("type", file?.type.includes("video") ? "VIDEO" : "IMAGE");
       // console.log(formData);
+      setIsLoading(true);
       postUserPostCreated(formData)
         .then((res) => {
           setFile(undefined);
           setDescription("");
-          setHashtags([]);
+          setHashtags("");
         })
         .catch((err) => console.log(err))
         .finally(() => {
           console.log("true-false loading");
+          setIsLoading(false);
         });
     }
   };
-  const renderLabel = ({
-    position,
-    label,
-    currentPosition,
-  }: {
-    position: number;
-    stepStatus: string;
-    label: string;
-    currentPosition: number;
-  }) => {
-    return (
-      <Text
-        style={
-          position === currentPosition
-            ? styles.stepLabelSelected
-            : styles.stepLabel
-        }
-      >
-        {label}
-      </Text>
-    );
-  };
-  const onStepPress = (position: number) => {
-    setCurrentPage(position);
-  };
+  if (isLoading) {
+    return <Text style={{ color: "#fff", marginTop: 30 }}>Paylaşılıyor</Text>;
+  }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.stepIndicator}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={30}
+    >
+      <SafeAreaView style={styles.container}>
         <StepIndicator
-          customStyles={firstIndicatorStyles}
-          currentPosition={currentPage}
-          labels={["as", "asd", "asdf", "asdfg", "asdfgh"]}
-          renderLabel={renderLabel}
-          onPress={onStepPress}
-        />
-        <Button onPress={createdPostSubmit} title="gönder"></Button>
-      </View>
-      <Text>Naber{currentPage}</Text>
-      {currentPage == 2 && <TakeVideo setFile={setFile}></TakeVideo>}
-      {currentPage == 3 && <TakePhoto setFile={setFile}></TakePhoto>}
-    </View>
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        ></StepIndicator>
+
+        {currentPage == 0 && (
+          <SelectType file={file} setFile={setFile}></SelectType>
+        )}
+        {currentPage == 1 && (
+          <InputPostInfo
+            file={file}
+            hashtags={hashtags}
+            setHashtags={setHashtags}
+            description={description}
+            setDescription={setDescription}
+          ></InputPostInfo>
+        )}
+        {currentPage == 2 && (
+          <View>
+            <ShowMedia file={file}></ShowMedia>
+            <View>
+              <Text>{description}</Text>
+              <Text>{hashtags}</Text>
+            </View>
+            <Button onPress={createdPostSubmit} title="Share"></Button>
+          </View>
+        )}
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -118,26 +133,7 @@ export default CreatePostScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
-  },
-  stepIndicator: {
-    marginVertical: 50,
-  },
-  page: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  stepLabel: {
-    fontSize: 12,
-    textAlign: "center",
-    fontWeight: "500",
-    color: "#999999",
-  },
-  stepLabelSelected: {
-    fontSize: 12,
-    textAlign: "center",
-    fontWeight: "500",
-    color: "#4aae4f",
+    marginTop: 30,
+    backgroundColor: "black",
   },
 });

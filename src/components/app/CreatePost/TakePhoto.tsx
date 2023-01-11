@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Button,
   Image,
+  TouchableOpacity,
 } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { Camera } from "expo-camera";
@@ -13,17 +14,20 @@ import { shareAsync } from "expo-sharing";
 import * as MediaLibrary from "expo-media-library";
 import { CameraCapturedPicture } from "expo-camera/src/Camera.types";
 import { FileType } from "../../../screen/app/CreatePostScreen";
-
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 type TakePhotoPropsType = {
   setFile: React.Dispatch<React.SetStateAction<FileType | undefined>>;
+  setPostCreatedType: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
-export default function TakePhoto({ setFile }: TakePhotoPropsType) {
+export default function TakePhoto({
+  setFile,
+  setPostCreatedType,
+}: TakePhotoPropsType) {
   let cameraRef = useRef<Camera>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean>();
-  const [hasMediaLibraryPermission, setHasMediaLibraryPermission] =
-    useState<boolean>();
-  const [photo, setPhoto] = useState<CameraCapturedPicture>();
+
+  // const [photo, setPhoto] = useState<CameraCapturedPicture>();
 
   useEffect(() => {
     (async () => {
@@ -31,7 +35,6 @@ export default function TakePhoto({ setFile }: TakePhotoPropsType) {
       const mediaLibraryPermission =
         await MediaLibrary.requestPermissionsAsync();
       setHasCameraPermission(cameraPermission.status === "granted");
-      setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
     })();
   }, []);
 
@@ -53,7 +56,6 @@ export default function TakePhoto({ setFile }: TakePhotoPropsType) {
     };
 
     let newPhoto = await cameraRef.current?.takePictureAsync(options);
-    setPhoto(newPhoto);
 
     let localUri = newPhoto?.uri;
     let filename = localUri?.split("/").pop();
@@ -63,55 +65,30 @@ export default function TakePhoto({ setFile }: TakePhotoPropsType) {
     let type = match ? `image/${match[1]}` : `image`;
 
     setFile({ uri: localUri || "", name: filename, type });
+    setPostCreatedType(undefined);
   };
-
-  if (photo) {
-    let sharePic = () => {
-      shareAsync(photo.uri).then(() => {
-        setPhoto(undefined);
-      });
-    };
-
-    let savePhoto = () => {
-      //   MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
-      //     setPhoto(undefined);
-      //   });
-    };
-
-    return (
-      <SafeAreaView style={styles.container}>
-        <Image
-          style={styles.preview}
-          source={{ uri: "data:image/jpg;base64," + photo.base64 }}
-        />
-        <Button title="Share" onPress={sharePic} />
-        {hasMediaLibraryPermission ? (
-          <Button title="Save" onPress={savePhoto} />
-        ) : undefined}
-        <Button title="Discard" onPress={() => setPhoto(undefined)} />
-      </SafeAreaView>
-    );
-  }
 
   return (
     <Camera style={styles.container} ref={cameraRef}>
       <View style={styles.buttonContainer}>
-        <Button title="Take Pic" onPress={takePic} />
+        <TouchableOpacity onPress={takePic}>
+          <MaterialCommunityIcons name="camera-iris" size={40} color="white" />
+        </TouchableOpacity>
       </View>
-      <StatusBar style="auto" />
     </Camera>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
+    height: "80%",
     justifyContent: "center",
+    position: "relative",
   },
   buttonContainer: {
-    backgroundColor: "#fff",
-    alignSelf: "flex-end",
+    position: "absolute",
+    bottom: 0,
   },
   preview: {
     alignSelf: "stretch",
