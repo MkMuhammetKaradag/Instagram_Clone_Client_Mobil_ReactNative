@@ -2,12 +2,13 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import * as React from "react";
 import { getChats } from "../../api/app/appApi";
 import { setChats } from "../../redux/user/UserSlice";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import ChatsList from "../../components/app/Chats/ChatsList";
 
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 const ChatsScreen = () => {
+  const user = useAppSelector((s) => s.auth.user);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
   React.useEffect(() => {
@@ -21,7 +22,7 @@ const ChatsScreen = () => {
   }, []);
 
   return (
-    <View>
+    <View style={{ flex: 1, backgroundColor: "black" }}>
       <View
         style={{
           backgroundColor: "black",
@@ -36,13 +37,15 @@ const ChatsScreen = () => {
       >
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          style={{ backgroundColor: "red" }}
+          // style={{ backgroundColor: "red" }}
         >
           <AntDesign name="arrowleft" size={25} color="#fff" />
         </TouchableOpacity>
-        <Text style={{ color: "#fff", marginLeft: 10 }}>User Nick Name</Text>
+        <Text style={{ color: "#fff", marginLeft: 10 }}>
+          {user?.userNickName}
+        </Text>
       </View>
-      <Text>Chat List</Text>
+      <Text style={{ color: "white", marginVertical: 20 }}>Mesajlar</Text>
       <ChatsList></ChatsList>
     </View>
   );
