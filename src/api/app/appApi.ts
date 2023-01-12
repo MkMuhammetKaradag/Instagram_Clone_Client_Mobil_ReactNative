@@ -3,7 +3,10 @@ import axios from "axios";
 import {
   getChatsRequestType,
   getMyFollowUpsPostsRequestType,
+  getUserRequestType,
+  UserType,
 } from "./appApiTypes";
+import { userType } from "../auth/authApiType";
 export const BASE_URL = LOCAL_URL;
 
 export const getMyFollowUpsPosts = async (
@@ -82,4 +85,17 @@ export const postUserPostCreated = async (formData: any) => {
     },
   });
   return data;
+};
+
+export const getUser = async (
+  userNickName?: string
+): Promise<getUserRequestType> => {
+  try {
+    const res = await axios.get(`${BASE_URL}/User/${userNickName}`, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error) {
+    throw new Error("Kullanıcı Bulunamadı");
+  }
 };

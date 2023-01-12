@@ -26,6 +26,9 @@ const InstagramMobilProvider = ({ children }: InstagramMobilProviderProps) => {
         setUserFollowUps(
           res.data.user?.followUps ? res.data.user?.followUps : []
         );
+        setUserFollowers(
+          res.data.user?.followers ? res.data.user?.followers : []
+        );
       })
       .catch((err) => {
         //console.log("naber hat");
@@ -52,6 +55,7 @@ const InstagramMobilProvider = ({ children }: InstagramMobilProviderProps) => {
         followers: userFollowers,
         likes: userLikes,
         followUps: userFollowUps,
+        chats: [],
       },
     },
   });

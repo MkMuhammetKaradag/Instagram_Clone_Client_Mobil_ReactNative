@@ -1,7 +1,16 @@
-import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { PostUserType } from "../../../../api/auth/authApiType";
+import { useNavigation } from "@react-navigation/native";
+import { AppScreenNavigationProp } from "../../../../navigation/AppStack";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
@@ -10,9 +19,13 @@ type UserPostHeaderProps = {
 };
 
 const UserPostHeader = ({ owner }: UserPostHeaderProps) => {
+  const navigation = useNavigation<AppScreenNavigationProp["navigation"]>();
   return (
     <View style={styles.headerContainer}>
-      <View
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("UserProfile", { userNickName: owner.userNickName })
+        }
         style={{
           flexDirection: "row",
           alignItems: "center",
@@ -33,7 +46,7 @@ const UserPostHeader = ({ owner }: UserPostHeaderProps) => {
         <Text style={{ color: "white", marginLeft: 10 }}>
           {owner.userNickName}
         </Text>
-      </View>
+      </TouchableOpacity>
       <View
         style={{
           alignItems: "center",

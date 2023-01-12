@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Image, Text, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, RouteProp } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -8,7 +8,7 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screen/app/HomeScreen";
 import SearchScreen from "../screen/app/SearchScreen";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import ProfileScreen from "../screen/app/ProfileScreen";
+import MyProfileScreen from "../screen/app/MyProfileScreen";
 import { useAppSelector } from "../redux/hooks";
 
 // function HomeScreen() {
@@ -29,8 +29,9 @@ function SettingsScreen() {
 export type TabStackParamList = {
   Home: undefined;
   Search: undefined;
-  Profile: undefined;
+  MyProfile: undefined;
 };
+
 export type AppTabScreenNavigationProp =
   BottomTabNavigationProp<TabStackParamList>;
 const Tab = createBottomTabNavigator<TabStackParamList>();
@@ -43,7 +44,7 @@ export default function AppTab() {
         tabBarIcon: ({ color, focused }) => {
           if (route.name === "Home") {
             return <Entypo name="home" size={24} color={color} />;
-          } else if (route.name === "Profile") {
+          } else if (route.name === "MyProfile") {
             return (
               <Image
                 style={{
@@ -77,7 +78,11 @@ export default function AppTab() {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen
+        // initialParams={{ userNickName: user?.userNickName }}
+        name="MyProfile"
+        component={MyProfileScreen}
+      />
     </Tab.Navigator>
   );
 }

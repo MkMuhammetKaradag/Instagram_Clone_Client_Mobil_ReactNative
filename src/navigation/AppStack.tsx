@@ -18,13 +18,14 @@ import ChatsScreen from "../screen/app/ChatsScreen";
 import MessageScreen from "../screen/app/MessageScreen";
 import type { RouteProp } from "@react-navigation/native";
 import CreatePostScreen from "../screen/app/CreatePostScreen";
+import UserProfileScreen from "../screen/app/UserProfileScreen";
 export type AppStackParamList = {
   TabApp: AppTabScreenNavigationProp;
   Comment: undefined;
   Chats: undefined;
   Message: { chatId?: string };
   CreatePost: undefined;
-
+  UserProfile: { userNickName?: string };
   //   SignUpScreen: undefined;
   //   AuthHomeScreen: undefined;
   // Order: {
@@ -35,6 +36,10 @@ export type AppStackNavigationProp =
   NativeStackNavigationProp<AppStackParamList>;
 
 export type MessageScreenRouteProp = RouteProp<AppStackParamList, "Message">;
+export type UserProfileScreenRouteProp = RouteProp<
+  AppStackParamList,
+  "UserProfile"
+>;
 
 export type AppScreenNavigationProp = CompositeScreenProps<
   StackScreenProps<AppStackParamList>,
@@ -73,6 +78,14 @@ const AppStack = () => {
         name="Message"
         component={MessageScreen}
         initialParams={{ chatId: undefined }}
+      ></Stack.Screen>
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="UserProfile"
+        component={UserProfileScreen}
+        initialParams={{ userNickName: undefined }}
       ></Stack.Screen>
       <Stack.Screen
         options={{

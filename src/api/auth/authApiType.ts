@@ -9,7 +9,8 @@ export type userType = {
   userNickName: string;
   userLikes?: string[];
   followUps?: string[];
-  myFollowRequests00?: string[];
+  followers?:string[];
+  myFollowRequests?: string[];
 };
 
 export type userLoginRequestType = {
