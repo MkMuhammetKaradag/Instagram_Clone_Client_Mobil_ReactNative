@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo } from "@expo/vector-icons";
@@ -8,6 +8,8 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screen/app/HomeScreen";
 import SearchScreen from "../screen/app/SearchScreen";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import ProfileScreen from "../screen/app/ProfileScreen";
+import { useAppSelector } from "../redux/hooks";
 
 // function HomeScreen() {
 //   return (
@@ -34,21 +36,37 @@ export type AppTabScreenNavigationProp =
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
 export default function AppTab() {
+  const user = useAppSelector((s) => s.auth.user);
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ color }) => {
+        tabBarIcon: ({ color, focused }) => {
           if (route.name === "Home") {
             return <Entypo name="home" size={24} color={color} />;
           } else if (route.name === "Profile") {
-            return <Feather name="settings" size={24} color={color} />;
+            return (
+              <Image
+                style={{
+                  width: !focused ? 30 : 34,
+                  height: !focused ? 30 : 34,
+                  borderRadius: 50,
+                  borderColor: color,
+                  borderWidth: !focused ? 0 : 2,
+                }}
+                source={{
+                  uri:
+                    user?.userProfilePicture ||
+                    "https://t4.ftcdn.net/jpg/00/65/77/27/360_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg",
+                }}
+              ></Image>
+            );
           } else if (route.name === "Search") {
             return <Ionicons name="search" size={24} color={color} />;
           }
 
           // You can return any component that you like here!
         },
-        tabBarActiveTintColor: "white",
+        tabBarActiveTintColor: "#ef406f",
         tabBarInactiveTintColor: "gray",
         tabBarShowLabel: false,
         headerShown: false,
@@ -59,7 +77,7 @@ export default function AppTab() {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="Profile" component={SettingsScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
