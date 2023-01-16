@@ -1,4 +1,4 @@
 import { API_URL } from "@env";
 
 export const PROD_URL = "*";
-export const LOCAL_URL = API_URL;
+export const LOCAL_URL = "http://192.168.1.33:8080";

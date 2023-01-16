@@ -1,6 +1,14 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React from "react";
 import { UserPostType } from "../../../api/app/appApiTypes";
+import PostCard from "./PostCard";
 
 type UserPostsPropsType = {
   userPosts: UserPostType[];
@@ -8,13 +16,18 @@ type UserPostsPropsType = {
 
 const UserPosts = ({ userPosts }: UserPostsPropsType) => {
   return (
-    <ScrollView>
-      {userPosts.map((post) => (
-        <Text key={post._id} style={{ color: "#fff", padding: 20 }}>
-          {post.description}
-        </Text>
-      ))}
-    </ScrollView>
+    <SafeAreaView style={{ flex: 1 }}>
+
+
+      <FlatList
+        data={userPosts}
+        nestedScrollEnabled={true}
+        renderItem={({ item }) => <PostCard post={item}></PostCard>}
+        //Setting the number of column
+        numColumns={3}
+        keyExtractor={(item) => item._id}
+      />
+    </SafeAreaView>
   );
 };
 

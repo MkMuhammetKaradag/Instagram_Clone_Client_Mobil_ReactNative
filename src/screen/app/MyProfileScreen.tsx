@@ -1,5 +1,7 @@
 import {
   SafeAreaView,
+  ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   useWindowDimensions,
@@ -47,7 +49,7 @@ const CustopTabBar = ({
   <TabBar
     {...props}
     indicatorStyle={{ backgroundColor: "white" }}
-    tabStyle={{ backgroundColor: "#000", minHeight: 30 }}
+    tabStyle={{ backgroundColor: "#000", minHeight: 30, maxHeight: 60 }}
     renderLabel={({ route, focused, color }) => (
       <View>
         {route.title == "Posts" ? (
@@ -57,7 +59,11 @@ const CustopTabBar = ({
             color={focused ? "#fff" : "gray"}
           />
         ) : (
-          <Text style={{ color: "white" }}>Test</Text>
+          <MaterialCommunityIcons
+            name="grid"
+            size={24}
+            color={focused ? "red" : "gray"}
+          />
         )}
       </View>
     )}
@@ -99,21 +105,37 @@ const MyProfileScreen = () => {
     }
   };
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
-      <ProfileHeader></ProfileHeader>
-      <UserProfileCard
-        userNickName={user?.userNickName}
-        userProfilePicture={user?.userProfilePicture}
-        userFollowUp={myFollowUps}
-        userFollowers={myFollowers}
-      ></UserProfileCard>
-      <TabView
-        navigationState={{ index, routes }}
-        renderTabBar={(props) => <CustopTabBar props={props}></CustopTabBar>}
-        renderScene={({ route }) => renderScene({ route })}
-        onIndexChange={setIndex}
-        initialLayout={{ width: layout.width }}
-      />
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: "black",
+        marginTop: StatusBar.currentHeight,
+      }}
+    >
+      <ScrollView
+        style={{ flex: 1 }}
+        stickyHeaderIndices={[2]}
+
+      >
+    
+        <ProfileHeader></ProfileHeader>
+        <UserProfileCard
+          userNickName={user?.userNickName}
+          userProfilePicture={user?.userProfilePicture}
+          userFollowUp={myFollowUps}
+          userFollowers={myFollowers}
+        ></UserProfileCard>
+
+        <TabView
+          navigationState={{ index, routes }}
+          renderTabBar={(props) => <CustopTabBar props={props}></CustopTabBar>}
+          renderScene={({ route }) => renderScene({ route })}
+          onIndexChange={setIndex}
+          initialLayout={{ width: layout.width, height: 400 }}
+          style={{ minHeight: 800, flex: 1 }}
+        />
+       
+      </ScrollView>
     </SafeAreaView>
   );
 };
