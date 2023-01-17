@@ -8,8 +8,9 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screen/app/HomeScreen";
 import SearchScreen from "../screen/app/SearchScreen";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import MyProfileScreen from "../screen/app/MyProfileScreen";
+
 import { useAppSelector } from "../redux/hooks";
+import UserProfileScreen from "../screen/app/UserProfileScreen";
 
 // function HomeScreen() {
 //   return (
@@ -29,7 +30,7 @@ function SettingsScreen() {
 export type TabStackParamList = {
   Home: undefined;
   Search: undefined;
-  MyProfile: undefined;
+  MyProfile: { userNickName?: string };
 };
 
 export type AppTabScreenNavigationProp =
@@ -81,7 +82,8 @@ export default function AppTab() {
       <Tab.Screen
         // initialParams={{ userNickName: user?.userNickName }}
         name="MyProfile"
-        component={MyProfileScreen}
+        initialParams={{ userNickName: undefined }}
+        component={UserProfileScreen}
       />
     </Tab.Navigator>
   );

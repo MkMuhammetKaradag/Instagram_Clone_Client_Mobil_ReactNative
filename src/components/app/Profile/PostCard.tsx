@@ -13,15 +13,15 @@ import { Octicons } from "@expo/vector-icons";
 type PostCardPropsType = {
   post: UserPostType;
 };
-const screenHeight = Dimensions.get("screen").width;
+const screenWidth = Dimensions.get("window").width;
 const PostCard = ({ post }: PostCardPropsType) => {
   return (
     <View
       style={{
-        width: "32%",
-        height: screenHeight * 0.32,
+        width: screenWidth * 0.32,
+        height: screenWidth * 0.32,
         flexDirection: "column",
-        margin: 3,
+        margin: 2,
         // backgroundColor: "red",
       }}
     >

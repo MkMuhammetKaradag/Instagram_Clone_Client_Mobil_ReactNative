@@ -16,18 +16,16 @@ type UserPostsPropsType = {
 
 const UserPosts = ({ userPosts }: UserPostsPropsType) => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-
-
-      <FlatList
-        data={userPosts}
-        nestedScrollEnabled={true}
-        renderItem={({ item }) => <PostCard post={item}></PostCard>}
-        //Setting the number of column
-        numColumns={3}
-        keyExtractor={(item) => item._id}
-      />
-    </SafeAreaView>
+    // <SafeAreaView style={{ flex: 1 }}>
+    <FlatList
+      data={userPosts}
+      // nestedScrollEnabled={true}
+      renderItem={({ item }) => <PostCard post={item}></PostCard>}
+      //Setting the number of column
+      numColumns={3}
+      keyExtractor={(item) => item._id}
+    />
+    // </SafeAreaView>
   );
 };
 

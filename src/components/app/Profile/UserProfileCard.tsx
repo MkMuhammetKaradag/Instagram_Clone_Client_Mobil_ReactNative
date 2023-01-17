@@ -6,9 +6,10 @@ import { getUserType } from "../../../api/app/appApiTypes";
 import { Feather } from "@expo/vector-icons";
 type UserPostCardPropsTRype = {
   userNickName?: string;
-  userProfilePicture?: string;
+  userProfilePicture?: string | null;
   userFollowers?: number;
   userFollowUp?: number;
+  userPostLength?: number;
 };
 
 const UserProfileCard = ({
@@ -16,6 +17,7 @@ const UserProfileCard = ({
   userProfilePicture,
   userFollowers,
   userFollowUp,
+  userPostLength,
 }: UserPostCardPropsTRype) => {
   const [loading, setLoading] = React.useState<boolean>(true);
   const [user, setUser] = React.useState<getUserType>();
@@ -40,7 +42,7 @@ const UserProfileCard = ({
           }}
         ></Image>
         <View style={{ alignItems: "center" }}>
-          <Text style={{ color: "#fff" }}>0</Text>
+          <Text style={{ color: "#fff" }}>{userPostLength || 0}</Text>
           <Text style={{ color: "#fff" }}>Gönderi</Text>
         </View>
         <View style={{ alignItems: "center" }}>

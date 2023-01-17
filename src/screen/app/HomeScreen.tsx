@@ -40,13 +40,19 @@ const HomeScreen = () => {
         .catch((err) => console.log(err));
     }
   };
+  const scrollViewRef = React.useRef<ScrollView>(null);
   return (
     <View style={styles.container}>
       {/* <TouchableOpacity style={styles.button} onPress={() => userLogOut()}>
         <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity> */}
       <Header></Header>
-      <ScrollView>
+      <ScrollView
+        ref={scrollViewRef}
+        // onContentSizeChange={(w: number, h: number) =>
+        //   scrollViewRef.current?.scrollTo({ x: w, y: h, animated: true })
+        // }
+      >
         <Stories></Stories>
         <UserPosts
           userPosts={userPosts}
