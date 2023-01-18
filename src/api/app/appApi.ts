@@ -2,6 +2,7 @@ import { LOCAL_URL } from "../url";
 import axios from "axios";
 import {
   getChatsRequestType,
+  getCommentsFromPostType,
   getMyFollowUpsPostsRequestType,
   getUserRequestType,
   UserType,
@@ -98,4 +99,41 @@ export const getUser = async (
   } catch (error) {
     throw new Error("Kullanıcı Bulunamadı");
   }
+};
+
+export const getCommentsFromPost = async ({
+  postId,
+  pageNumber,
+}: {
+  postId?: string;
+  pageNumber: number;
+}): Promise<getCommentsFromPostType> => {
+  const { data } = await axios.get(
+    `${BASE_URL}/Post/comment/${postId}?pageNuber=${pageNumber}`,
+    {
+      withCredentials: true,
+    }
+  );
+  return data;
+};
+export type postCommentRequestType = {
+  message: string;
+  data: {
+    comments: string[];
+  };
+};
+export const postComment = async (
+  postId: string,
+  input: {
+    description: string;
+  }
+): Promise<postCommentRequestType> => {
+  const { data } = await axios.post(
+    `${BASE_URL}/Post/comment/${postId}`,
+    input,
+    {
+      withCredentials: true,
+    }
+  );
+  return data;
 };

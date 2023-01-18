@@ -19,9 +19,10 @@ import MessageScreen from "../screen/app/MessageScreen";
 import type { RouteProp } from "@react-navigation/native";
 import CreatePostScreen from "../screen/app/CreatePostScreen";
 import UserProfileScreen from "../screen/app/UserProfileScreen";
+import { UserPostType } from "../api/app/appApiTypes";
 export type AppStackParamList = {
   TabApp: AppTabScreenNavigationProp;
-  Comment: undefined;
+  Comment: { userPost?: UserPostType };
   Chats: undefined;
   Message: { chatId?: string };
   CreatePost: undefined;
@@ -36,6 +37,7 @@ export type AppStackNavigationProp =
   NativeStackNavigationProp<AppStackParamList>;
 
 export type MessageScreenRouteProp = RouteProp<AppStackParamList, "Message">;
+export type CommentScreenRouteProp = RouteProp<AppStackParamList, "Comment">;
 export type UserProfileScreenRouteProp = RouteProp<
   AppStackParamList,
   "UserProfile"
@@ -63,6 +65,7 @@ const AppStack = () => {
         }}
         name="Comment"
         component={CommentScreen}
+        initialParams={{ userPost: undefined }}
       ></Stack.Screen>
       <Stack.Screen
         options={{

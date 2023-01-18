@@ -14,6 +14,8 @@ import { Playback } from "expo-av/build/AV";
 import { ResizeMode } from "expo-av/build/Video.types";
 import UserPostHeader from "./UserPostHeader";
 import UserPostFooter from "./UserPostFooter";
+import { AppScreenNavigationProp } from "../../../../navigation/AppStack";
+import { useNavigation } from "@react-navigation/native";
 type UserPostCardProps = {
   userPost: PostType;
 };
@@ -23,6 +25,10 @@ const UserPostCard = ({ userPost }: UserPostCardProps) => {
   //   console.log(userPost);
   const video = React.useRef<Playback>(null);
   const [status, setStatus] = React.useState<AVPlaybackStatus>();
+  const navigation = useNavigation<AppScreenNavigationProp["navigation"]>();
+  const ClickComment = () => {
+    navigation.navigate("Comment", { userPost });
+  };
   return (
     <View style={styles.container}>
       <UserPostHeader owner={userPost.owner}></UserPostHeader>
@@ -76,7 +82,10 @@ const UserPostCard = ({ userPost }: UserPostCardProps) => {
         </View>
       )}
       <Text style={{ color: "white" }}>{userPost.description}</Text>
-      <UserPostFooter postId={userPost._id}></UserPostFooter>
+      <UserPostFooter
+        postId={userPost._id}
+        ClickComment={ClickComment}
+      ></UserPostFooter>
     </View>
   );
 };

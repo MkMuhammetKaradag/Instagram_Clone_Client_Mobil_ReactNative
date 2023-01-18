@@ -1,11 +1,197 @@
-import { StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  StatusBar,
+  Dimensions,
+  FlatList,
+  SafeAreaView,
+  TouchableOpacity,
+  TextInput,
+  Button,
+} from "react-native";
 import React from "react";
-
+import { useRoute } from "@react-navigation/native";
+import { CommentScreenRouteProp } from "../../navigation/AppStack";
+import { getCommentsFromPost, postComment } from "../../api/app/appApi";
+import MultiTapOverlay from "../../components/MultiTapOverlay";
+import { postCommentType } from "../../api/app/appApiTypes";
+import { NULL_URL } from "../../api/url";
+import { AntDesign } from "@expo/vector-icons";
+import { Input, Stack } from "native-base";
+import { useAppSelector } from "../../redux/hooks";
 const CommentScreen = () => {
+  const {
+    params: { userPost },
+  } = useRoute<CommentScreenRouteProp>();
+
+  const [comments, setComments] = React.useState<postCommentType[]>([]);
+  const [isLoader, setIsLoader] = React.useState(false);
+  const user = useAppSelector((s) => s.auth.user);
+  const [commentInput, setCommentInput] = React.useState("");
+  React.useEffect(() => {
+    getCommentsFromPost({
+      postId: userPost?._id,
+      pageNumber: Math.ceil(comments.length / 10 + 1),
+    })
+      .then((res) => {
+        setComments(res.data.comments);
+        setIsLoader(
+          res.data.comments.length % 10 === 0 && res.data.comments.length != 0
+        );
+      })
+      .catch((err) => console.log(err));
+  }, []);
+  const fetchData = () => {
+    if (comments.length % 10 === 0 && userPost) {
+      // console.log(Math.ceil(comments.length / 10 + 1));
+      getCommentsFromPost({
+        postId: userPost._id,
+        pageNumber: Math.ceil(comments.length / 10 + 1),
+      })
+        .then((res) => {
+          setComments((prev) => [...prev, ...res.data.comments]);
+          setIsLoader(res.data.comments.length % 10 === 0);
+        })
+        .catch((err) => console.log(err));
+      // }, 1500);
+    }
+  };
+
+  const addComment = () => {
+    if (userPost && user) {
+      postComment(userPost._id, { description: commentInput })
+        .then((res) => {
+          if (res.data.comments) {
+            if (comments.length % 10 !== 0 || res.data.comments.length === 1) {
+              setComments((prev) => [
+                ...prev,
+                {
+                  _id: res.data.comments[res.data.comments.length - 1],
+                  description: commentInput,
+                  user: {
+                    _id: user._id,
+                    userProfilePicture: user.userProfilePicture,
+                    userNickName: user.userNickName,
+                  },
+                },
+              ]);
+            }
+            // console.log(res.data.comments);
+            setCommentInput("");
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
   return (
-    <View>
-      <Text>CommentScreen</Text>
-    </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#000" }}>
+      <FlatList
+        data={comments}
+        ListFooterComponent={() =>
+          isLoader && comments.length > 0 ? (
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <TouchableOpacity onPress={fetchData}>
+                <AntDesign name="pluscircle" size={24} color="#fff" />
+              </TouchableOpacity>
+            </View>
+          ) : null
+        }
+        ListHeaderComponent={() => (
+          <>
+            <MultiTapOverlay
+              onLongPress={() => console.log("long")}
+              onMultiTaps={() => console.log("double")}
+            >
+              <Image
+                style={{
+                  width: Dimensions.get("window").width,
+                  height: Dimensions.get("window").height * 0.5,
+                  resizeMode: "cover",
+                }}
+                source={{
+                  uri: userPost?.image_url || "",
+                }}
+              ></Image>
+            </MultiTapOverlay>
+            <Text style={{ color: "#fff" }}>Comments</Text>
+          </>
+        )}
+        // nestedScrollEnabled={true}
+        scrollEnabled={true}
+        // stickyHeaderIndices={[0]}
+        // stickyHeaderHiddenOnScroll={tr}
+        renderItem={({ item }) => (
+          <View
+            style={{
+              flex: 1,
+              padding: 20,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Image
+              style={{ width: 40, height: 40, borderRadius: 50 }}
+              source={{ uri: item.user.userProfilePicture || NULL_URL }}
+            ></Image>
+            <View style={{ marginLeft: 20, flex: 1 }}>
+              <Text style={{ color: "#fff" }}>{item.user.userNickName}</Text>
+              <Text style={{ color: "#fff" }} numberOfLines={2}>
+                {item.description}
+              </Text>
+            </View>
+          </View>
+        )}
+        keyExtractor={(item) => item._id}
+      />
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          width: Dimensions.get("window").width,
+          paddingHorizontal: 10,
+
+          alignItems: "center",
+          height: "5%",
+          minHeight: 40,
+        }}
+      >
+        <View style={{ width: "10%" }}>
+          <Image
+            style={{
+              width: "90%",
+              height: "90%",
+              borderRadius: 50,
+            }}
+            source={{ uri: NULL_URL }}
+          ></Image>
+        </View>
+        <Stack space={1} w="75%" maxW="300px" mx="auto" paddingLeft={"2"}>
+          <Input
+            value={commentInput}
+            maxLength={100}
+            style={{ color: "#fff" }}
+            underlineColorAndroid="#fff"
+            variant="underlined"
+            placeholder="Comment"
+            onChangeText={(e) => setCommentInput(e)}
+          />
+        </Stack>
+        <TouchableOpacity
+          style={{ width: "15%", paddingLeft: 10 }}
+          disabled={!(commentInput.length > 2)}
+          onPress={() => addComment()}
+        >
+          <Text style={{ color: commentInput.length > 2 ? "#fff" : "red" }}>
+            send
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 

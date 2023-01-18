@@ -11,8 +11,9 @@ import { AppScreenNavigationProp } from "../../../../navigation/AppStack";
 
 type UserPostFooterProps = {
   postId: string;
+  ClickComment: () => void;
 };
-const UserPostFooter = ({ postId }: UserPostFooterProps) => {
+const UserPostFooter = ({ postId, ClickComment }: UserPostFooterProps) => {
   const likes = useAppSelector((s) => s.user.likes);
   const user = useAppSelector((s) => s.auth.user);
   const navigation = useNavigation<AppScreenNavigationProp["navigation"]>();
@@ -62,9 +63,7 @@ const UserPostFooter = ({ postId }: UserPostFooterProps) => {
           style={{ marginLeft: 10 }}
           name="message-circle"
           size={24}
-          onPress={() => {
-            navigation.navigate("Comment");
-          }}
+          onPress={() => ClickComment()}
           color="white"
         />
         <Feather

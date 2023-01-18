@@ -13,7 +13,20 @@ export type PostType = {
   image_url: string | null;
   createdAt: string;
 };
-
+export type UserPostType = {
+  // will be deleted
+  _id: string;
+  description: string;
+  type: string;
+  hastags: string[];
+  likes: string[];
+  owner: PostUserType;
+  comments: string[];
+  total_views: number;
+  video_url: string | null;
+  image_url: string | null;
+  createdAt: string;
+};
 export type getMyFollowUpsPostsRequestType = {
   message: string;
   data: {
@@ -37,22 +50,6 @@ export type getChatsRequestType = {
   };
 };
 
-export type UserPostType = {
-  _id: string;
-  description: string;
-  type: string;
-  hastags: string[];
-  likes: UserType[];
-  comments: {
-    _id: string;
-    description: string;
-    user: UserType;
-  }[];
-  total_views: number;
-  video_url: string | null;
-  image_url: string | null;
-  createdAt: string;
-};
 export type getUserType = {
   email: string;
   userProfilePicture: string | null;
@@ -67,5 +64,17 @@ export type getUserRequestType = {
   message: string;
   data: {
     user: getUserType;
+  };
+};
+
+export type postCommentType = {
+  _id: string;
+  description: string;
+  user: PostUserType;
+};
+export type getCommentsFromPostType = {
+  message: string;
+  data: {
+    comments: postCommentType[];
   };
 };
