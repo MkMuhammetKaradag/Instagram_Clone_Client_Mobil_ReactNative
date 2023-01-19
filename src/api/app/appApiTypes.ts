@@ -13,6 +13,7 @@ export type PostType = {
   image_url: string | null;
   createdAt: string;
 };
+
 export type UserPostType = {
   // will be deleted
   _id: string;
@@ -76,5 +77,17 @@ export type getCommentsFromPostType = {
   message: string;
   data: {
     comments: postCommentType[];
+  };
+};
+
+
+
+
+
+
+export type getDiscoverPostsRequestType = {
+  message: string;
+  data: {
+    posts: PostType[];
   };
 };

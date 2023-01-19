@@ -3,6 +3,7 @@ import axios from "axios";
 import {
   getChatsRequestType,
   getCommentsFromPostType,
+  getDiscoverPostsRequestType,
   getMyFollowUpsPostsRequestType,
   getUserRequestType,
   UserType,
@@ -135,5 +136,17 @@ export const postComment = async (
       withCredentials: true,
     }
   );
+  return data;
+};
+
+
+
+
+export const getDiscoverPosts = async (
+  pageNumber: number
+): Promise<getDiscoverPostsRequestType> => {
+  const { data } = await axios.get(`${BASE_URL}/Post?pageNuber=${pageNumber}`, {
+    withCredentials: true,
+  });
   return data;
 };

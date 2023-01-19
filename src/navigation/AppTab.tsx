@@ -6,7 +6,7 @@ import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screen/app/HomeScreen";
-import SearchScreen from "../screen/app/SearchScreen";
+import DiscoverScreen from "../screen/app/DiscoverScreen";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 
 import { useAppSelector } from "../redux/hooks";
@@ -29,7 +29,7 @@ function SettingsScreen() {
 }
 export type TabStackParamList = {
   Home: undefined;
-  Search: undefined;
+  Discover: undefined;
   MyProfile: { userNickName?: string };
 };
 
@@ -62,7 +62,7 @@ export default function AppTab() {
                 }}
               ></Image>
             );
-          } else if (route.name === "Search") {
+          } else if (route.name === "Discover") {
             return <Ionicons name="search" size={24} color={color} />;
           }
 
@@ -78,7 +78,7 @@ export default function AppTab() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Search" component={SearchScreen} />
+      <Tab.Screen name="Discover" component={DiscoverScreen} />
       <Tab.Screen
         // initialParams={{ userNickName: user?.userNickName }}
         name="MyProfile"
