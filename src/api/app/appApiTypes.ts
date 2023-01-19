@@ -91,3 +91,11 @@ export type getDiscoverPostsRequestType = {
     posts: PostType[];
   };
 };
+
+
+export type getSearchUsersRequestType = {
+  message: string;
+  data: {
+    users: PostUserType[];
+  };
+};

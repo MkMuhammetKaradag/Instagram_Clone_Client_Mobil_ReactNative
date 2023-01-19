@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   SafeAreaView,
+  Dimensions,
 } from "react-native";
 import React from "react";
 
@@ -15,10 +16,14 @@ import GetIsSkeleton from "../../components/app/Discover/GetIsSkeleton";
 import PostCard from "../../components/app/Profile/PostCard";
 import { AntDesign } from "@expo/vector-icons";
 import { Input, InputGroup, InputLeftAddon, Stack } from "native-base";
+import SearchScreen from "./SearchScreen";
 const DiscoverScreen = () => {
+  const [modalVisible, setModalVisible] = React.useState(false);
+
   const [posts, setPosts] = React.useState<PostType[]>([]);
   const [isLoader, setIsLoader] = React.useState(false);
   const [isSkeleton, setIsSkeleton] = React.useState(true);
+  const [searchUserInput, setSearchUserInput] = React.useState("");
   React.useEffect(() => {
     getDiscoverPosts(1)
       .then((res) => {
@@ -57,9 +62,51 @@ const DiscoverScreen = () => {
         flex: 1,
       }}
     >
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          width: Dimensions.get("window").width,
+          paddingHorizontal: 10,
+
+          alignItems: "center",
+          height: Dimensions.get("window").height * 0.06,
+          minHeight: 40,
+        }}
+      >
+        {searchUserInput.length > 0 && modalVisible && (
+          <SearchScreen
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            searchUser={searchUserInput}
+          ></SearchScreen>
+        )}
+
+        <TouchableOpacity
+          style={{ width: "10%" }}
+          onPress={() => {
+            setModalVisible(() => (!!searchUserInput ? true : false));
+          }}
+        >
+          <AntDesign name="search1" size={24} color="#fff" />
+        </TouchableOpacity>
+        <Stack space={1} w={"100%"} mx="auto" style={{ marginLeft: 10 }}>
+          <Input
+            maxLength={100}
+            style={{ color: "#fff" }}
+            value={searchUserInput}
+            onChangeText={(e) => setSearchUserInput(e)}
+            w={"80%"}
+            variant="unstyled"
+            placeholder="Search"
+          />
+        </Stack>
+      </View>
       <FlatList
+        style={{ flex: 1 }}
         data={posts}
-        stickyHeaderIndices={[0]}
+        // stickyHeaderIndices={[0]}
         ListFooterComponent={() =>
           isSkeleton ? (
             <GetIsSkeleton></GetIsSkeleton>
@@ -71,40 +118,11 @@ const DiscoverScreen = () => {
             </View>
           ) : null
         }
-        ListHeaderComponent={() => (
-          <>
-            <Stack w={"100%"} style={{ backgroundColor: "#000" }}>
-              <InputGroup
-                w={{
-                  base: "100%",
-                  md: "285",
-                }}
-                justifyContent="center"
-              >
-                <InputLeftAddon
-                  variant={"unstyled"}
-                  w={"10%"}
-                  backgroundColor="#000"
-                  borderWidth={"0"}
-                  children={
-                    <TouchableOpacity>
-                      <AntDesign name="search1" size={24} color="#fff" />
-                    </TouchableOpacity>
-                  }
-                />
-                <Input
-                  style={{ color: "#fff" }}
-                  w={{
-                    base: "90%",
-                    md: "100%",
-                  }}
-                  variant="unstyled"
-                  placeholder="nativebase"
-                />
-              </InputGroup>
-            </Stack>
-          </>
-        )}
+        // ListHeaderComponent={() => (
+        //   <>
+
+        //   </>
+        // )}
         // nestedScrollEnabled={true}
         scrollEnabled={true}
         // stickyHeaderIndices={[0]}

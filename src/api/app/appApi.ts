@@ -5,6 +5,7 @@ import {
   getCommentsFromPostType,
   getDiscoverPostsRequestType,
   getMyFollowUpsPostsRequestType,
+  getSearchUsersRequestType,
   getUserRequestType,
   UserType,
 } from "./appApiTypes";
@@ -139,14 +140,24 @@ export const postComment = async (
   return data;
 };
 
-
-
-
 export const getDiscoverPosts = async (
   pageNumber: number
 ): Promise<getDiscoverPostsRequestType> => {
   const { data } = await axios.get(`${BASE_URL}/Post?pageNuber=${pageNumber}`, {
     withCredentials: true,
   });
+  return data;
+};
+
+export const getSearchUsers = async (
+  searchText: string,
+  pageNumber: number
+): Promise<getSearchUsersRequestType> => {
+  const { data } = await axios.get(
+    `${BASE_URL}/User/search?searchText=${searchText}&pageNuber=${pageNumber}`,
+    {
+      withCredentials: true,
+    }
+  );
   return data;
 };
