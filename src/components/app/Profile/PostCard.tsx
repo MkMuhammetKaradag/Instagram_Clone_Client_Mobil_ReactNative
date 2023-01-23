@@ -10,11 +10,15 @@ import React from "react";
 import { UserPostType } from "../../../api/app/appApiTypes";
 import { Video } from "expo-av";
 import { Octicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { AppScreenNavigationProp } from "../../../navigation/AppStack";
 type PostCardPropsType = {
   post: UserPostType;
 };
 const screenWidth = Dimensions.get("window").width;
 const PostCard = ({ post }: PostCardPropsType) => {
+  const navigation = useNavigation<AppScreenNavigationProp["navigation"]>();
+
   return (
     <View
       style={{
@@ -28,7 +32,7 @@ const PostCard = ({ post }: PostCardPropsType) => {
       {post.type == "VIDEO" && (
         <TouchableOpacity
           style={{ width: "100%", height: "100%", position: "relative" }}
-          onPress={() => console.log("video")}
+          onPress={() => navigation.navigate("Comment", { userPost: post })}
         >
           <Video
             style={{ width: "100%", height: "100%" }}
@@ -45,7 +49,7 @@ const PostCard = ({ post }: PostCardPropsType) => {
       {post.type == "IMAGE" && (
         <TouchableOpacity
           style={{ width: "100%", height: "100%" }}
-          onPress={() => console.log("resim")}
+          onPress={() => navigation.navigate("Comment", { userPost: post })}
         >
           <Image
             style={{ width: "100%", height: "100%", resizeMode: "cover" }}

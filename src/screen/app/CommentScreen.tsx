@@ -11,17 +11,25 @@ import {
   TouchableOpacity,
   TextInput,
   Button,
+  Animated,
 } from "react-native";
 import React from "react";
 import { useRoute } from "@react-navigation/native";
 import { CommentScreenRouteProp } from "../../navigation/AppStack";
-import { getCommentsFromPost, postComment } from "../../api/app/appApi";
+import {
+  addPostLike,
+  getCommentsFromPost,
+  postComment,
+  removePostLike,
+} from "../../api/app/appApi";
 import MultiTapOverlay from "../../components/MultiTapOverlay";
 import { postCommentType } from "../../api/app/appApiTypes";
 import { NULL_URL } from "../../api/url";
 import { AntDesign } from "@expo/vector-icons";
 import { Input, Stack } from "native-base";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { deleteLike, setLike } from "../../redux/user/UserSlice";
+
 const CommentScreen = () => {
   const {
     params: { userPost },
@@ -30,7 +38,9 @@ const CommentScreen = () => {
   const [comments, setComments] = React.useState<postCommentType[]>([]);
   const [isLoader, setIsLoader] = React.useState(false);
   const user = useAppSelector((s) => s.auth.user);
+  const likes = useAppSelector((s) => s.user.likes);
   const [commentInput, setCommentInput] = React.useState("");
+  const dispatch = useAppDispatch();
   React.useEffect(() => {
     getCommentsFromPost({
       postId: userPost?._id,
@@ -87,6 +97,43 @@ const CommentScreen = () => {
     }
   };
 
+  const firstOpacity = React.useRef(new Animated.Value(0)).current;
+  const onDoubleClick = () => {
+    Animated.stagger(1000, [
+      Animated.timing(firstOpacity, {
+        toValue: 1,
+        useNativeDriver: true,
+      }),
+      Animated.timing(firstOpacity, {
+        toValue: 0,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  const addLike = () => {
+    if (userPost) {
+      addPostLike(userPost?._id)
+        .then((res) => {
+          if (user) {
+            dispatch(setLike(userPost?._id));
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+  const removeLike = () => {
+    if (userPost) {
+      removePostLike(userPost?._id)
+        .then((res) => {
+          if (user) {
+            dispatch(deleteLike(userPost?._id));
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#000" }}>
       <FlatList
@@ -104,26 +151,49 @@ const CommentScreen = () => {
           <>
             <MultiTapOverlay
               onLongPress={() => console.log("long")}
-              onMultiTaps={() => console.log("double")}
+              onMultiTaps={() => {
+                onDoubleClick();
+                !likes.includes(userPost?._id || "") ? addLike() : removeLike();
+              }}
             >
-              <Image
+              <View
                 style={{
-                  width: Dimensions.get("window").width,
-                  height: Dimensions.get("window").height * 0.5,
-                  resizeMode: "cover",
+                  position: "relative",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
-                source={{
-                  uri: userPost?.image_url || "",
-                }}
-              ></Image>
+              >
+                <Image
+                  style={{
+                    width: Dimensions.get("window").width,
+                    height: Dimensions.get("window").height * 0.5,
+                    resizeMode: "cover",
+                  }}
+                  source={{
+                    uri: userPost?.image_url || "",
+                  }}
+                ></Image>
+                <Animated.View
+                  style={{
+                    position: "absolute",
+
+                    opacity: firstOpacity,
+                  }}
+                >
+                  <AntDesign
+                    name="heart"
+                    size={60}
+                    color={
+                      !likes.includes(userPost?._id || "") ? "black" : "red"
+                    }
+                  />
+                </Animated.View>
+              </View>
             </MultiTapOverlay>
             <Text style={{ color: "#fff" }}>Comments</Text>
           </>
         )}
-        // nestedScrollEnabled={true}
         scrollEnabled={true}
-        // stickyHeaderIndices={[0]}
-        // stickyHeaderHiddenOnScroll={tr}
         renderItem={({ item }) => (
           <View
             style={{

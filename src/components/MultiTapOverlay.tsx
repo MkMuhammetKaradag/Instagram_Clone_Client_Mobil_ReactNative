@@ -12,7 +12,7 @@ const MultiTapOverlay = ({
   onLongPress,
   onMultiTaps,
   multiTapCount = 2,
-  multiTapDelay = 300,
+  multiTapDelay = 500,
   children,
 }: MultiTapOverlayPropsType) => {
   const [lastPress, setLastPress] = React.useState<number>(0);

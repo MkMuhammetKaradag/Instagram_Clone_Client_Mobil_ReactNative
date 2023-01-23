@@ -1,8 +1,21 @@
-import { ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
+import {
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 import { Button, Modal } from "native-base";
 import { getSearchUsers } from "../../api/app/appApi";
 import { PostUserType } from "../../api/auth/authApiType";
+import { NULL_URL } from "../../api/url";
+import { useNavigation } from "@react-navigation/native";
+import { AppScreenNavigationProp } from "../../navigation/AppStack";
+import { MaterialIcons } from "@expo/vector-icons";
+
 type SearchScreenPropsType = {
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,6 +29,7 @@ const SearchScreen = ({
 }: SearchScreenPropsType) => {
   const [searchUsers, setSearchUsers] = React.useState<PostUserType[]>([]);
   const [isLoader, setIsLoader] = React.useState(false);
+  const navigation = useNavigation<AppScreenNavigationProp["navigation"]>();
   React.useEffect(() => {
     fetchData();
   }, [searchUser]);
@@ -36,42 +50,67 @@ const SearchScreen = ({
       onClose={() => setModalVisible(false)}
       size={`full`}
       height="full"
+      backgroundColor={"#000"}
     >
       <Modal.Content
         minHeight={"full"}
-        style={{ marginBottom: "auto", marginTop: StatusBar.currentHeight }}
+        style={{
+          marginBottom: "auto",
+          marginTop: StatusBar.currentHeight,
+          backgroundColor: "#000",
+        }}
       >
         <Modal.CloseButton />
-        <Modal.Header>{searchUser}</Modal.Header>
-        <Modal.Body>
+        <Modal.Header style={{ backgroundColor: "#000" }}>
+          <Text style={{ color: "#fff", fontSize: 20 }}>{searchUser}</Text>
+        </Modal.Header>
+        <Modal.Body style={{ backgroundColor: "#000", flex: 1 }}>
           <ScrollView>
             {searchUsers.map((item) => (
-              <Text key={item._id} style={{ marginTop: 200 }}>
-                {item.userNickName}
-              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisible(false);
+                  navigation.navigate("UserProfile", {
+                    userNickName: item.userNickName,
+                  });
+                }}
+                style={{
+                  borderBottomWidth: 1,
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginTop: 10,
+                  borderColor: "gray",
+                  padding: 5,
+                }}
+                key={item._id}
+              >
+                <Image
+                  style={{ width: 40, height: 40, borderRadius: 50 }}
+                  source={{
+                    uri: item.userProfilePicture || NULL_URL,
+                  }}
+                ></Image>
+                <Text style={{ color: "#fff", marginLeft: 20 }}>
+                  {item.userNickName}
+                </Text>
+              </TouchableOpacity>
             ))}
-          </ScrollView>
-          {/* <FlatList
-            style={{ flex: 1 }}
-            data={searchUsers}
-            // stickyHeaderIndices={[0]}
-            ListFooterComponent={() =>
-              isLoader && searchUsers.length > 0 ? (
-                <View style={{ flex: 1, alignItems: "center" }}>
-                  <TouchableOpacity onPress={fetchData}>
-                    <AntDesign name="pluscircle" size={24} color="#fff" />
-                  </TouchableOpacity>
-                </View>
-              ) : null
-            }
-            scrollEnabled={true}
-            renderItem={({ item }) => (
-              <Text style={{ marginTop: 200 }}>{item.userNickName}</Text>
+            {isLoader && searchUsers.length > 0 && (
+              <View
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <TouchableOpacity onPress={fetchData}>
+                  <MaterialIcons name="add-to-photos" size={30} color="gray" />
+                </TouchableOpacity>
+              </View>
             )}
-            keyExtractor={(item) => item._id}
-          ></FlatList> */}
+          </ScrollView>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer style={{ backgroundColor: "#000" }}>
           <Button.Group space={2}>
             <Button
               variant="ghost"
